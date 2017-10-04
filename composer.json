@@ -1,0 +1,37 @@
+{
+  "name": "sidedevorg/miniphpfw",
+  "description": "Mini php framework based on 3 party vendors",
+  "keywords": ["framework", "php"],
+  "license": "MIT",
+  "homepage": "https://github.com/sidedevorg/miniphpfw",
+  "support": {
+    "issues": "https://github.com/sidedevorg/miniphpfw/issues",
+    "source": "https://github.com/sidedevorg/miniphpfw"
+  },
+  "authors": [
+    {
+      "name": "Diego Vilariño",
+      "email": "diego.vilarino@gmail.com",
+      "homepage": "http://dieg0v.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "nikic/fast-route": "^1.2",
+    "mustache/mustache": "^2.12",
+    "vlucas/phpdotenv": "^2.4",
+    "illuminate/database": "^5.4",
+    "filp/whoops": "^2.1",
+    "illuminate/events": "^5.4",
+    "relay/relay": "^1.1",
+    "zendframework/zend-diactoros": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "SideDevOrg\\MiniPhpFw\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
