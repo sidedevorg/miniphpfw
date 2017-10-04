@@ -51,7 +51,7 @@ class Bootstrap
     /**
      * Load errors strategy.
      */
-    private function errors() 
+    private function errors()
     {
         if (env('DEV_MODE')) {
             $whoops = new \Whoops\Run();
@@ -80,7 +80,7 @@ class Bootstrap
     /**
      * Load orm strategy.
      */
-    private function orm() 
+    private function orm()
     {
         if (env('LOAD_ORM')) {
             $capsule = new \Illuminate\Database\Capsule\Manager();
