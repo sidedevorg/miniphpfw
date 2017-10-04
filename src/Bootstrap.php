@@ -41,6 +41,11 @@ class Bootstrap
         $this->paths = array_merge($this->paths, $paths);
         $this->options = array_merge($this->options, $options);
 
+        /**
+         * @todo fix this
+         */
+        define('MINIPHPFW_TPL_PATH', $this->paths['view']);
+
         $this->errors();
         $this->enviroment();
         $this->templates();

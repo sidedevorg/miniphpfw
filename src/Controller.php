@@ -111,7 +111,7 @@ class Controller
     public function view(string $template, array $data = []) : string
     {
         if (!$this->mustacheInstance) {
-            $viewsRoute = 'app/views';
+            $viewsRoute = MINIPHPFW_TPL_PATH;
             $options = ['extension' => '.hbs'];
 
             $this->mustacheInstance = new Mustache_Engine(array(
