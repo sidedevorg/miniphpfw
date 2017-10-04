@@ -72,7 +72,7 @@ class Bootstrap
     /**
      * Load templates strategy.
      */
-    private function templates(): void
+    private function templates()
     {
         \Mustache_Autoloader::register();
     }
