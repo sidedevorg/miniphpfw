@@ -18,6 +18,13 @@ class Controller
     private $data;
 
     /**
+     * I18n array container.
+     *
+     * @var array
+     */
+    private $i18n;
+
+    /**
      * Request.
      *
      * @var \Psr\Http\Message\RequestInterface
@@ -99,6 +106,39 @@ class Controller
     public function data(string $key, $value)
     {
         return $this->data[$key] = $value;
+    }
+
+    /**
+     * Get lang key in file.key format.
+     *
+     * @param string      $fileKey
+     * @param bool|string $changeLang false or lang code
+     *
+     * @return string
+     */
+    public function lang($fileKey, $changeLang = false)
+    {
+        $lang = (!$changeLang) ? $this->request->getHeader('lang')[0] : $changeLang;
+
+        $search = explode('.', $fileKey);
+        $file = $search[0].'.php';
+        $key = isset($search[1]) ? $search[1] : '';
+
+        $route = MINIPHPFW_TPL_I18N.'/'.$lang.'/'.$file;
+        if (!file_exists($route)) {
+            return $fileKey;
+        }
+
+        $data = require_once $route;
+
+        if (is_array($data)) {
+            $this->i18n[$lang][$file] = $data;
+        }
+
+        return isset($this->i18n[$lang][$file][$key]) ?
+            $this->i18n[$lang][$file][$key] :
+            $fileKey
+        ;
     }
 
     /**

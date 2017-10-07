@@ -8,6 +8,13 @@ namespace SideDevOrg\MiniPhpFw;
 class Bootstrap
 {
     /**
+     * Default lang.
+     *
+     * @var string
+     */
+    private $lang = 'en';
+
+    /**
      * Default paths.
      *
      * @var array
@@ -41,10 +48,11 @@ class Bootstrap
         $this->paths = array_merge($this->paths, $paths);
         $this->options = array_merge($this->options, $options);
 
-        /**
+        /*
          * @todo fix this
          */
         define('MINIPHPFW_TPL_PATH', $this->paths['view']);
+        define('MINIPHPFW_TPL_I18N', $this->paths['i18n']);
 
         $this->errors();
         $this->enviroment();
@@ -122,6 +130,8 @@ class Bootstrap
                 'cacheFile' => $this->options['routesCache'],
             ]
         );
+
+        $request = $request->withHeader('lang', $this->lang);
 
         $routeInfo = $dispatcher->dispatch(
             $request->getMethod(),
