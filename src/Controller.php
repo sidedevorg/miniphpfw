@@ -118,7 +118,7 @@ class Controller
      */
     public function lang($fileKey, $changeLang = false)
     {
-        $lang = (!$changeLang) ? $this->request->getHeader('lang')[0] : $changeLang;
+        $lang = (!$changeLang) ? $this->header('lang') : $changeLang;
 
         $search = explode('.', $fileKey);
         $file = $search[0].'.php';
