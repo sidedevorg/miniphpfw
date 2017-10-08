@@ -8,51 +8,31 @@ namespace SideDevOrg\MiniPhpFw;
 class Bootstrap
 {
     /**
-     * Default lang.
-     *
-     * @var string
-     */
-    private $lang = 'en';
-
-    /**
-     * Default paths.
-     *
-     * @var array
-     */
-    private $paths = [
-        'database' => 'app/config/database.php',
-        'middlewares' => 'app/config/middlewares.php',
-        'routes' => 'app/config/routes.php',
-        'env' => 'app',
-        'view' => 'app/views',
-        'i18n' => 'app/langs',
-    ];
-
-    /**
      * Default options.
      *
      * @var array
      */
-    private $options = [
-        'routesCache' => 'app/storage/route.cache',
+    private $config = [
+        'lang' => 'en',
+        'paths' => [
+            'database' => 'app/config/database.php',
+            'middlewares' => 'app/config/middlewares.php',
+            'routes' => 'app/config/routes.php',
+            'env' => 'app',
+            'view' => 'app/views',
+            'i18n' => 'app/langs',
+            'routesCache' => 'app/storage/route.cache',
+        ],
     ];
 
     /**
      * Load framework.
      *
-     * @param array $paths
-     * @param array $options
+     * @param array $config
      */
-    public function load(array $paths = [], array $options = [])
+    public function load(array $config = [])
     {
-        $this->paths = array_merge($this->paths, $paths);
-        $this->options = array_merge($this->options, $options);
-
-        /*
-         * @todo fix this
-         */
-        define('MINIPHPFW_TPL_PATH', $this->paths['view']);
-        define('MINIPHPFW_TPL_I18N', $this->paths['i18n']);
+        $this->config = array_merge($this->config, $config);
 
         $this->errors();
         $this->enviroment();
@@ -78,7 +58,7 @@ class Bootstrap
      */
     private function enviroment()
     {
-        $dotenv = new \Dotenv\Dotenv($this->paths['env']);
+        $dotenv = new \Dotenv\Dotenv($this->config['paths']['env']);
         $dotenv->load();
     }
 
@@ -97,7 +77,7 @@ class Bootstrap
     {
         if (env('LOAD_ORM')) {
             $capsule = new \Illuminate\Database\Capsule\Manager();
-            $connections = require_once $this->paths['database'];
+            $connections = require_once $this->config['paths']['database'];
             foreach ($connections as $connection) {
                 $name = $connection['name'];
                 unset($connection['name']);
@@ -118,7 +98,7 @@ class Bootstrap
      */
     private function route()
     {
-        $routes = require_once $this->paths['routes'];
+        $routes = require_once $this->config['paths']['routes'];
         $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 
         $dispatcher = \FastRoute\cachedDispatcher(
@@ -127,11 +107,11 @@ class Bootstrap
                     $r->addRoute($route['methods'], $route['endpoint'], $route['call']);
                 }
             }, [
-                'cacheFile' => $this->options['routesCache'],
+                'cacheFile' => $this->config['paths']['routesCache'],
             ]
         );
 
-        $request = $request->withHeader('lang', $this->lang);
+        $request = $request->withHeader('config', json_encode($this->config));
 
         $routeInfo = $dispatcher->dispatch(
             $request->getMethod(),
@@ -160,7 +140,7 @@ class Bootstrap
                     $vars,
                     $request,
                     $response = new \Zend\Diactoros\Response(),
-                    $middlewares = require_once $this->paths['middlewares']
+                    $middlewares = require_once $this->config['paths']['middlewares']
                 );
 
                 (new \Zend\Diactoros\Response\SapiEmitter())->emit($response);

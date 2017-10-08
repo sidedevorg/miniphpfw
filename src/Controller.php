@@ -138,7 +138,7 @@ class Controller
         $file = $search[0].'.php';
         $key = isset($search[1]) ? $search[1] : '';
 
-        $route = MINIPHPFW_TPL_I18N.'/'.$lang.'/'.$file;
+        $route = $this->config('paths.i18n').'/'.$lang.'/'.$file;
         if (!file_exists($route)) {
             return $fileKey;
         }
@@ -156,6 +156,26 @@ class Controller
     }
 
     /**
+     * Get config item.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    protected function config(string $key)
+    {
+        $config = json_decode($this->header('config'), true);
+        $definition = explode('.', $key);
+        $item = isset($config[$definition[0]]) ? $config[$definition[0]] : null;
+
+        for ($i = 1; $i < count($definition); ++$i) {
+            $item = isset($item['view']) ? $item['view'] : null;
+        }
+
+        return $item;
+    }
+
+    /**
      * Get view.
      *
      * @param string $template
@@ -165,7 +185,7 @@ class Controller
     protected function view(string $template, array $data = []) : string
     {
         if (!$this->mustacheInstance) {
-            $viewsRoute = MINIPHPFW_TPL_PATH;
+            $viewsRoute = $this->config('paths.view');
             $options = ['extension' => '.hbs'];
 
             $this->mustacheInstance = new Mustache_Engine(array(
