@@ -57,7 +57,7 @@ class Controller
      *
      * @return mixed
      */
-    public function header(string $name) : string
+    protected function header(string $name) : string
     {
         return isset($this->request->getHeaders()[$name]) ?
             $this->request->getHeaders()[$name][0] : null;
@@ -72,7 +72,7 @@ class Controller
      *
      * @return mixed
      */
-    public function input(string $name, mixed $defaultValue = null, bool $autoTrim = true)
+    protected function input(string $name, mixed $defaultValue = null, bool $autoTrim = true)
     {
         $value = false;
 
@@ -98,14 +98,28 @@ class Controller
     /**
      * Set data.
      *
-     * @param string $key
-     * @param mixed  $value
+     * @param mixed $key   string or array
+     * @param mixed $value if $key is string
      *
      * @return mixed
      */
-    public function data(string $key, $value)
+    protected function data($key, $value = false)
     {
+        if (is_array($key)) {
+            return $this->data = array_merge($this->data, $key);
+        }
+
         return $this->data[$key] = $value;
+    }
+
+    /**
+     * Get data.
+     *
+     * @return array
+     */
+    protected function getData()
+    {
+        return $this->data;
     }
 
     /**
@@ -116,7 +130,7 @@ class Controller
      *
      * @return string
      */
-    public function lang($fileKey, $changeLang = false)
+    protected function lang($fileKey, $changeLang = false)
     {
         $lang = (!$changeLang) ? $this->header('lang') : $changeLang;
 
@@ -148,24 +162,23 @@ class Controller
      *
      * @return string
      */
-    public function view(string $template, array $data = []) : string
+    protected function view(string $template, array $data = []) : string
     {
         if (!$this->mustacheInstance) {
             $viewsRoute = MINIPHPFW_TPL_PATH;
             $options = ['extension' => '.hbs'];
 
             $this->mustacheInstance = new Mustache_Engine(array(
-              'loader' => new Mustache_Loader_FilesystemLoader($viewsRoute, $options),
-              'partials_loader' => new Mustache_Loader_FilesystemLoader($viewsRoute, $options),
-              'charset' => 'UTF-8',
+                'loader' => new Mustache_Loader_FilesystemLoader($viewsRoute, $options),
+                'partials_loader' => new Mustache_Loader_FilesystemLoader($viewsRoute, $options),
+                'charset' => 'UTF-8',
             ));
         }
 
         $tpl = $this->mustacheInstance->loadTemplate($template);
+        $data = array_merge($this->getData(), $data);
 
-        $this->data = array_merge($data, $this->data);
-
-        return $tpl->render($this->data);
+        return $tpl->render($data);
     }
 
     /**
