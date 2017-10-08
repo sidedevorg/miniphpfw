@@ -117,7 +117,7 @@ class Controller
      *
      * @return array
      */
-    protected function getData()
+    protected function getData() : array
     {
         return $this->data;
     }
@@ -130,7 +130,7 @@ class Controller
      *
      * @return string
      */
-    protected function lang($fileKey, $changeLang = false)
+    protected function lang($fileKey, $changeLang = false) : string
     {
         $lang = (!$changeLang) ? $this->header('lang') : $changeLang;
 
