@@ -15,14 +15,14 @@ class Controller
      *
      * @var array
      */
-    private $data;
+    private $data = [];
 
     /**
      * I18n array container.
      *
      * @var array
      */
-    private $i18n;
+    private $i18n = [];
 
     /**
      * Request.
