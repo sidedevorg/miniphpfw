@@ -22,6 +22,7 @@ class Bootstrap
             'view' => 'app/views',
             'i18n' => 'app/langs',
             'routesCache' => 'app/storage/route.cache',
+            'assets_manifest' => 'static/build/mix-manifest.json',
         ],
     ];
 
@@ -32,7 +33,7 @@ class Bootstrap
      */
     public function load(array $config = [])
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = array_replace_recursive($this->config, $config);
 
         $this->errors();
         $this->enviroment();

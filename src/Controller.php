@@ -169,7 +169,7 @@ class Controller
         $item = isset($config[$definition[0]]) ? $config[$definition[0]] : null;
 
         for ($i = 1; $i < count($definition); ++$i) {
-            $item = isset($item['view']) ? $item['view'] : null;
+            $item = isset($item[$definition[$i]]) ? $item[$definition[$i]] : null;
         }
 
         return $item;
@@ -198,7 +198,42 @@ class Controller
         $tpl = $this->mustacheInstance->loadTemplate($template);
         $data = array_merge($this->getData(), $data);
 
-        return $tpl->render($data);
+        return $tpl->render($this->mapData($data));
+    }
+
+    /**
+     * Map data to output.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function mapData(array $data) : array
+    {
+        $assets = [
+            'js' => false,
+            'css' => false,
+        ];
+
+        $assets_path = $this->config('paths.assets_manifest');
+
+        if (file_exists($assets_path)) {
+            $assets_data = json_decode(file_get_contents($assets_path), true);
+            $assets = [
+                'js' => $assets_data['/app.js'],
+                'css' => $assets_data['/app.css'],
+            ];
+        }
+
+        $tplData = [
+            'fw' => [
+                'assets' => $assets,
+                'i18n' => [],
+                'data' => $data,
+            ],
+        ];
+
+        return $tplData;
     }
 
     /**
