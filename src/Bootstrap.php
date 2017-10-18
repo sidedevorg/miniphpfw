@@ -24,6 +24,9 @@ class Bootstrap
             'routesCache' => 'app/storage/route.cache',
             'assets_manifest' => 'static/build/mix-manifest.json',
         ],
+        'config' => [
+            'not_found_controller' => '\SideDevOrg\MiniPhpFw\Controller::not_found',
+        ]
     ];
 
     /**
@@ -129,7 +132,7 @@ class Bootstrap
             case \FastRoute\Dispatcher::NOT_FOUND:
             case \FastRoute\Dispatcher::FOUND:
 
-                $handler = isset($routeInfo[1]) ? $routeInfo[1] : '\SideDevOrg\MiniPhpFw\Controller::not_found';
+                $handler = isset($routeInfo[1]) ? $routeInfo[1] : $this->config['config']['not_found_controller'];
                 $vars = isset($routeInfo[2]) ? $routeInfo[2] : [];
                 $handler = explode('::', $handler);
                 $class = $handler[0];
