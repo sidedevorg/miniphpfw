@@ -30,19 +30,30 @@ class Bootstrap
     ];
 
     /**
+     * Response
+     *
+     * @var \Psr\Http\Message\ResponseInterface
+     */
+    private $response;
+
+    /**
      * Load framework.
      *
      * @param array $config
+     *
+     * @return \SideDevOrg\MiniPhpFw\Bootstrap
      */
     public function load(array $config = [])
     {
         $this->config = array_replace_recursive($this->config, $config);
 
-        $this->errors();
         $this->enviroment();
+        $this->errors();
         $this->templates();
         $this->orm();
-        $this->route();
+        $this->router();
+
+        return $this;
     }
 
     /**
@@ -98,9 +109,9 @@ class Bootstrap
     }
 
     /**
-     * Load route strategy.
+     * Load router strategy.
      */
-    private function route()
+    private function router()
     {
         $routes = require_once $this->config['paths']['routes'];
         $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
@@ -110,7 +121,8 @@ class Bootstrap
                 foreach ($routes as $route) {
                     $r->addRoute($route['methods'], $route['endpoint'], $route['call']);
                 }
-            }, [
+            },
+            [
                 'cacheFile' => $this->config['paths']['routesCache'],
             ]
         );
@@ -147,8 +159,18 @@ class Bootstrap
                     $middlewares = require_once $this->config['paths']['middlewares']
                 );
 
-                (new \Zend\Diactoros\Response\SapiEmitter())->emit($response);
+                $this->response = $response;
                 break;
         }
+    }
+
+    /**
+     * Get response.
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function getResponse() : \Psr\Http\Message\ResponseInterface
+    {
+        return $this->response;
     }
 }
