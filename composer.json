@@ -32,6 +32,11 @@
       "SideDevOrg\\MiniPhpFw\\": "src/"
     }
   },
+  "autoload-dev": {
+    "files": [
+      "tests/helpers/DummyController.php"
+    ]
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
