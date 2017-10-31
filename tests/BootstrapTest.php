@@ -77,6 +77,21 @@ class BootstrapTest extends TestCase
     }
 
     /**
+     * Test not found.
+     */
+    public function testNotFound()
+    {
+        $this->removeCache();
+
+        $this->config['paths']['routes'] = 'tests/helpers/files/routes_404.php';
+
+        $response = (new SideDevOrg\MiniPhpFw\Bootstrap())->load($this->config);
+
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response->getResponse());
+        $this->assertEquals(404, $response->getResponse()->getStatusCode());
+    }
+
+    /**
      * Test Not Allowed.
      */
     public function testNotAllowed()
