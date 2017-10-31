@@ -92,7 +92,7 @@ class Bootstrap
     {
         if (env('LOAD_ORM')) {
             $capsule = new \Illuminate\Database\Capsule\Manager();
-            $connections = require_once $this->config['paths']['database'];
+            $connections = require $this->config['paths']['database'];
             foreach ($connections as $connection) {
                 $name = $connection['name'];
                 unset($connection['name']);
@@ -113,7 +113,7 @@ class Bootstrap
      */
     private function router()
     {
-        $routes = require_once $this->config['paths']['routes'];
+        $routes = require $this->config['paths']['routes'];
         $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 
         $dispatcher = \FastRoute\cachedDispatcher(
@@ -134,11 +134,15 @@ class Bootstrap
             $request->getUri()->getPath()
         );
 
+        $response = new \Zend\Diactoros\Response();
+
         switch ($routeInfo[0]) {
 
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                echo '405 METHOD_NOT_ALLOWED';
+                $response->getBody()->write('METHOD NOT ALLOWED');
+                $response = $response->withStatus(405);
+                $this->response = $response;
                 break;
 
             case \FastRoute\Dispatcher::NOT_FOUND:
@@ -155,10 +159,13 @@ class Bootstrap
                     $method,
                     $vars,
                     $request,
-                    $response = new \Zend\Diactoros\Response(),
-                    $middlewares = require_once $this->config['paths']['middlewares']
+                    $response,
+                    $middlewares = require $this->config['paths']['middlewares']
                 );
 
+                if (!isset($routeInfo[1])) {
+                    $response = $response->withStatus(404);
+                }
                 $this->response = $response;
                 break;
         }
