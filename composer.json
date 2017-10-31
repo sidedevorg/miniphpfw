@@ -34,7 +34,8 @@
   },
   "autoload-dev": {
     "files": [
-      "tests/helpers/DummyController.php"
+      "tests/helpers/DummyController.php",
+      "tests/helpers/DummyMiddleware.php"
     ]
   },
   "minimum-stability": "dev",
