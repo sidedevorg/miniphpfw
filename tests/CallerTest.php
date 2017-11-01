@@ -30,7 +30,8 @@ class CallerTest extends TestCase
 
         $call->getBody()->rewind();
 
-        $this->assertEquals($call->getBody()->getContents(),
+        $this->assertEquals(
+            $call->getBody()->getContents(),
             (new DummyController())->dummyMethod()
         );
     }

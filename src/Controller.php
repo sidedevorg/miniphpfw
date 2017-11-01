@@ -55,9 +55,9 @@ class Controller
      *
      * @param string $name
      *
-     * @return mixed
+     * @return mixed srtring or null
      */
-    protected function header(string $name) : string
+    protected function header(string $name)
     {
         return isset($this->request->getHeaders()[$name]) ?
             $this->request->getHeaders()[$name][0] : null;

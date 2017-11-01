@@ -63,4 +63,22 @@ class ControllerTest extends TestCase
 
         $this->assertInstanceOf('\Psr\Http\Message\RequestInterface', $request);
     }
+
+    /**
+     * Test get header.
+     */
+    public function testGetHeader()
+    {
+        $class = new ReflectionClass('DummyController');
+        $method = $class->getMethod('header');
+        $method->setAccessible(true);
+
+        $this->controller->setRequest($this->request);
+
+        $header = $method->invokeArgs($this->controller, ['config']);
+        $this->assertEquals(is_string($header), true);
+
+        $header = $method->invokeArgs($this->controller, ['non-exists-header']);
+        $this->assertEquals($header, null);
+    }
 }
