@@ -150,8 +150,7 @@ class Controller
         }
 
         return isset($this->i18n[$lang][$file][$key]) ?
-            $this->i18n[$lang][$file][$key] :
-            $fileKey
+            $this->i18n[$lang][$file][$key] : $fileKey
         ;
     }
 
@@ -168,7 +167,7 @@ class Controller
         $definition = explode('.', $key);
         $item = isset($config[$definition[0]]) ? $config[$definition[0]] : null;
 
-        $numberOfDefinitions =  count($definition);
+        $numberOfDefinitions = count($definition);
 
         for ($i = 1; $i < $numberOfDefinitions; ++$i) {
             $item = isset($item[$definition[$i]]) ? $item[$definition[$i]] : null;
