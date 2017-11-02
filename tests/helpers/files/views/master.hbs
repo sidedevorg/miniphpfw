@@ -1,0 +1,21 @@
+{{% BLOCKS }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{$ title }}miniphpfw-project{{/ title }}</title>
+        {{$ styles }}
+        <link rel="stylesheet" type="text/css" href="/static/build{{ fw.assets.css }}">
+        {{/ styles }}
+    </head>
+    <body>
+        <div class="page">
+            <h1>miniphpfw-project</h1>
+            <div class="content">
+                {{$ content }}{{/ content }}
+            </div>
+            {{$ scripts }}
+            <script src="/static/build{{ fw.assets.js }}"></script>
+            {{/ scripts }}
+        </div>
+    </body>
+</html>
