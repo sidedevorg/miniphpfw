@@ -55,12 +55,12 @@ class Controller
      *
      * @param string $name
      *
-     * @return mixed srtring or null
+     * @return mixed srtring or false
      */
     protected function header(string $name)
     {
         return isset($this->request->getHeaders()[$name]) ?
-            $this->request->getHeaders()[$name][0] : null;
+            $this->request->getHeaders()[$name][0] : false;
     }
 
     /**
@@ -132,7 +132,10 @@ class Controller
      */
     protected function lang($fileKey, $changeLang = false) : string
     {
-        $lang = (!$changeLang) ? $this->header('lang') : $changeLang;
+        $defaultHeaderLang = 'en';
+        $headerLang = ($this->header('lang')) ? $this->header('lang') : $defaultHeaderLang;
+
+        $lang = (!$changeLang) ? $headerLang : $changeLang;
 
         $search = explode('.', $fileKey);
         $file = $search[0].'.php';
@@ -168,7 +171,9 @@ class Controller
         $definition = explode('.', $key);
         $item = isset($config[$definition[0]]) ? $config[$definition[0]] : null;
 
-        for ($i = 1; $i < count($definition); ++$i) {
+        $numberOfDefinitions =  count($definition);
+
+        for ($i = 1; $i < $numberOfDefinitions; ++$i) {
             $item = isset($item[$definition[$i]]) ? $item[$definition[$i]] : null;
         }
 
