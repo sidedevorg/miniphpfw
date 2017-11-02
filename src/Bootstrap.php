@@ -117,7 +117,7 @@ class Bootstrap
         $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 
         $dispatcher = \FastRoute\cachedDispatcher(
-            function (\FastRoute\RouteCollector $r) use ($routes) {
+            function(\FastRoute\RouteCollector $r) use ($routes) {
                 foreach ($routes as $route) {
                     $r->addRoute($route['methods'], $route['endpoint'], $route['call']);
                 }

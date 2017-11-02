@@ -31,7 +31,7 @@ class Resolver
     ) : \Psr\Http\Message\ResponseInterface {
         $middlewares[] = Caller::class;
 
-        $relayBuilder = new RelayBuilder(function ($instance) use ($class, $method, $vars) {
+        $relayBuilder = new RelayBuilder(function($instance) use ($class, $method, $vars) {
             if ($instance == Caller::class) {
                 return new $instance($class, $method, $vars);
             }
