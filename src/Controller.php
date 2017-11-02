@@ -72,7 +72,7 @@ class Controller
      *
      * @return mixed
      */
-    protected function input(string $name, mixed $defaultValue = null, bool $autoTrim = true)
+    protected function input(string $name, $defaultValue = null, bool $autoTrim = true)
     {
         $value = false;
 
