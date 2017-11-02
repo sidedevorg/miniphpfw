@@ -26,11 +26,11 @@ class Bootstrap
         ],
         'config' => [
             'not_found_controller' => '\SideDevOrg\MiniPhpFw\Controller::not_found',
-        ]
+        ],
     ];
 
     /**
-     * Response
+     * Response.
      *
      * @var \Psr\Http\Message\ResponseInterface
      */
@@ -127,6 +127,7 @@ class Bootstrap
             ]
         );
 
+        $request = $request->withHeader('lang', $this->config['lang']);
         $request = $request->withHeader('config', json_encode($this->config));
 
         $routeInfo = $dispatcher->dispatch(

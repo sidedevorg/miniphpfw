@@ -12,6 +12,6 @@ class DummyController extends SideDevOrg\MiniPhpFw\Controller
 
     public function not_found() : string
     {
-        return 'not found';
+        return parent::not_found();
     }
 }

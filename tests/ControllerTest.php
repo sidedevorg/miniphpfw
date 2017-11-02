@@ -49,6 +49,7 @@ class ControllerTest extends TestCase
     public function setUp()
     {
         $this->request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
+        $this->request = $this->request->withHeader('lang', $this->config['lang']);
         $this->request = $this->request->withHeader('config', json_encode($this->config));
 
         $this->controller = new DummyController();
@@ -91,21 +92,21 @@ class ControllerTest extends TestCase
         $method = $class->getMethod('input');
         $method->setAccessible(true);
 
-        $this->request= $this->request
+        $this->request = $this->request
             ->withMethod('POST')
-            ->withParsedBody(['input_key'=>'is_ok'])
+            ->withParsedBody(['input_key' => 'is_ok'])
         ;
         $this->controller->setRequest($this->request);
 
         $input = $method->invokeArgs($this->controller, ['input_key']);
         $this->assertEquals($input, 'is_ok');
 
-        $input = $method->invokeArgs($this->controller, ['non-exists', ['var' => false] ]);
+        $input = $method->invokeArgs($this->controller, ['non-exists', ['var' => false]]);
         $this->assertEquals(is_array($input), true);
 
-        $this->request= $this->request
+        $this->request = $this->request
             ->withMethod('GET')
-            ->withQueryParams(['input_key'=>'is_ok'])
+            ->withQueryParams(['input_key' => 'is_ok'])
         ;
         $this->controller->setRequest($this->request);
 
@@ -146,5 +147,58 @@ class ControllerTest extends TestCase
 
         $data = $methodGet->invoke($this->controller);
         $this->assertEquals($data, ['key' => 'value', 'is_array' => true]);
+    }
+
+    /**
+     * Test lang.
+     */
+    public function testLang()
+    {
+        $this->controller->setRequest($this->request);
+
+        $class = new ReflectionClass('DummyController');
+
+        $method = $class->getMethod('lang');
+        $method->setAccessible(true);
+
+        $i18n = $method->invokeArgs($this->controller, ['file.key', false]);
+        $this->assertEquals(is_string($i18n), true);
+        $this->assertEquals($i18n, 'file.key');
+
+        $i18n = $method->invokeArgs($this->controller, ['test.msn']);
+        $this->assertEquals(is_string($i18n), true);
+        $this->assertEquals($i18n, 'hello test!');
+
+        $i18n = $method->invokeArgs($this->controller, ['test.msn', 'es']);
+        $this->assertEquals(is_string($i18n), true);
+        $this->assertEquals($i18n, 'hola test!');
+    }
+
+    /**
+     * Test view.
+     */
+    public function testView()
+    {
+        $this->controller->setRequest($this->request);
+
+        $class = new ReflectionClass('DummyController');
+
+        $method = $class->getMethod('view');
+        $method->setAccessible(true);
+
+        $view = $method->invokeArgs($this->controller, ['home']);
+        $this->assertEquals(is_string($view), true);
+    }
+
+    /**
+     * Test not found view.
+     */
+    public function testNotFoundView()
+    {
+        $this->controller->setRequest($this->request);
+
+        $view = $this->controller->not_found();
+
+        $this->assertEquals(is_string($view), true);
     }
 }
