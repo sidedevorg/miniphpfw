@@ -120,7 +120,7 @@ class Bootstrap
         $cacheFile = $this->config['paths']['routesCache'].'/'.$cacheFileName;
 
         if (!file_exists($cacheFile)) {
-            array_map('unlink', glob( $this->config['paths']['routesCache'].'/*.cache'));
+            array_map('unlink', glob($this->config['paths']['routesCache'].'/*.cache'));
         }
 
         $dispatcher = \FastRoute\cachedDispatcher(
