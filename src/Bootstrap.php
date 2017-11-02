@@ -140,7 +140,6 @@ class Bootstrap
         switch ($routeInfo[0]) {
 
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                $allowedMethods = $routeInfo[1];
                 $response->getBody()->write('METHOD NOT ALLOWED');
                 $response = $response->withStatus(405);
                 $this->response = $response;
