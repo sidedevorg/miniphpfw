@@ -21,7 +21,7 @@ class Bootstrap
             'env' => 'app',
             'view' => 'app/views',
             'i18n' => 'app/langs',
-            'routesCache' => 'app/storage/route.cache',
+            'routesCache' => 'app/storage',
             'assets_manifest' => 'static/build/mix-manifest.json',
         ],
         'config' => [
@@ -116,6 +116,13 @@ class Bootstrap
         $routes = require $this->config['paths']['routes'];
         $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 
+        $cacheFileName = 'routes.'.filemtime($this->config['paths']['routes']).'.cache';
+        $cacheFile = $this->config['paths']['routesCache'].'/'.$cacheFileName;
+
+        if (!file_exists($cacheFile)) {
+            array_map('unlink', glob( $this->config['paths']['routesCache'].'/*.cache'));
+        }
+
         $dispatcher = \FastRoute\cachedDispatcher(
             function(\FastRoute\RouteCollector $r) use ($routes) {
                 foreach ($routes as $route) {
@@ -123,7 +130,7 @@ class Bootstrap
                 }
             },
             [
-                'cacheFile' => $this->config['paths']['routesCache'],
+                'cacheFile' => $cacheFile,
             ]
         );
 

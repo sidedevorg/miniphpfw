@@ -12,7 +12,7 @@ class BootstrapTest extends TestCase
      *
      * @var string
      */
-    private $route_cache_path = 'tests/helpers/files/route.cache';
+    private $route_cache_path = 'tests/helpers/files';
 
     /**
      * Config.
@@ -58,9 +58,7 @@ class BootstrapTest extends TestCase
      */
     private function removeCache()
     {
-        if (file_exists($this->route_cache_path)) {
-            unlink($this->route_cache_path);
-        }
+        array_map('unlink', glob( $this->route_cache_path.'/*.cache'));
     }
 
     /**
