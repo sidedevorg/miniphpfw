@@ -231,6 +231,7 @@ class Controller
                 'assets' => $assets,
                 'i18n' => [],
                 'data' => $data,
+                'lang' => $this->header('lang'),
             ],
         ];
 
